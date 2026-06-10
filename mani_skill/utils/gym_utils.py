@@ -9,6 +9,10 @@ from gymnasium import spaces
 from mani_skill.utils.logging_utils import logger
 from mani_skill.vector.wrappers.gymnasium import ManiSkillVectorEnv
 
+IS_GYMNASIUM_1 = False
+if gym.__version__ > "1.0.0":
+    IS_GYMNASIUM_1 = True
+
 
 def find_max_episode_steps_value(env):
     """Finds the max episode steps parameter given by user or registered in the environment.
@@ -97,7 +101,7 @@ def inv_clip_and_scale_action(action, low, high):
     return np.clip(action, -1.0, 1.0)
 
 
-def clip_and_scale_action(action, low, high):
+def clip_and_scale_action(action: torch.Tensor, low: torch.Tensor, high: torch.Tensor):
     """Clip action to [-1, 1] and scale according to a range [low, high]."""
     action = torch.clip(action, -1, 1)
     return 0.5 * (high + low) + 0.5 * (high - low) * action
